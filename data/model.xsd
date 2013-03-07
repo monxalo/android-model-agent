@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- definition of simple elements -->
+
+<!-- definition of attributes -->
+<xs:attribute name="namespace" type="xs:string"/>
+<xs:attribute name="prefix" type="xs:string"/>
+<xs:attribute name="name" type="xs:string"/>
+<xs:attribute name="type">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="int"/>
+			<xs:enumeration value="string"/>
+			<xs:enumeration value="date"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:attribute>
+<xs:attribute name="isNull" type="xs:boolean"/>
+<xs:attribute name="generateIds" type="xs:boolean"/>
+<xs:attribute name="ref" type="xs:string"/>
+<xs:attribute name="hasAndBelongsToMany" type="xs:string"/>
+
+<!-- definition of complex elements -->
+
+<xs:element name="field">
+  <xs:complexType>
+	<xs:attribute ref="name" use="required"/>
+	<xs:attribute ref="type" use="required"/>
+	<xs:attribute ref="isNull" use="required"/>
+	<xs:attribute ref="ref"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="entity">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="field"/>
+    </xs:sequence>
+	<xs:attribute ref="name" use="required"/>
+	<xs:attribute ref="generateIds" use="required"/>
+	<xs:attribute ref="hasAndBelongsToMany"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="root">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="entity"/>
+    </xs:sequence>
+    <xs:attribute ref="namespace" use="required"/>
+	<xs:attribute ref="prefix" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

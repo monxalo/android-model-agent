@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root namespace="com.example.noteapp" prefix="NoteApps" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="model.xsd">
+
+	<entity name="notes" generateIds="true">
+	    <field name="title" isNull="false" type="string" />
+	    <field name="text" isNull="false" type="string" />
+	    <field name="date_created" isNull="false" type="date" />
+	</entity>
+</root>

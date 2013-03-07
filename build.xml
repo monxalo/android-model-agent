@@ -1,0 +1,39 @@
+<project name="model-gen" default="gen" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="prefix" value="NotesApp" />
+  <property name="gen" location="gen"/>
+  
+  <path id="lib.path">
+     <fileset dir="lib">
+	<include name="**/*.jar" />
+     </fileset>
+  </path>
+  
+  <taskdef name="fmpp" classpathref="lib.path" classname="fmpp.tools.AntTask" />
+  <target name="gen" depends="clean">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${gen}"/>
+  	
+    <fmpp dataRoot="." sourceRoot="src" outputRoot="${gen}"
+    	removeExtensions="ftl">
+    	<data>{doc: xml(data/model.xml)}</data>
+   	</fmpp>
+  	<move todir="${gen}" includeemptydirs="false">
+  	    <fileset dir="${gen}" />
+  	    <mapper type="glob" from="*" to="${prefix}*"/>
+  	  </move>
+  </target>
+
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${gen}"/>
+  </target>
+</project>

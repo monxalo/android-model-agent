@@ -1,0 +1,8 @@
+bin/*
+gen/*
+requestReview.sh
+
+.externalToolBuilders
+.project
+.settings
+.DS_Store
