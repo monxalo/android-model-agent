@@ -92,3 +92,12 @@ ${query}case ${from?upper_case}_ID_${to?upper_case}: {
 <#function getClassName name>
 <#return name?replace("_"," ")?capitalize?replace(" ","")>
 </#function>
+
+<#function getSingular entity>
+<#if entity.@singular[0]??>
+<#assign singular = entity.@singular>
+<#else>
+<#assign singular = entity.@name?substring(0,entity.@name?length-1) >
+</#if>
+<#return singular>
+</#function>

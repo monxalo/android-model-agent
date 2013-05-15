@@ -8,4 +8,8 @@ xsi:noNamespaceSchemaLocation="model.xsd">
 	    <field name="text" isNull="false" type="string" />
 	    <field name="date_created" isNull="false" type="date" />
 	</entity>
+	<entity name="inventories" generateIds="true" singular="inventory">
+	    <field name="title" isNull="false" type="string" />
+	    <field name="text" isNull="false" type="string" />
+	</entity>
 </root>
