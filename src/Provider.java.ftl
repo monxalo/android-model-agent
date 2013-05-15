@@ -7,7 +7,7 @@ package ${namespace}.provider;
 import java.util.ArrayList;
 
 <#list doc.root.entity as p>
-import ${namespace}.provider.${prefix}Contract.${getClassName(p.@name)};
+import ${namespace}.provider.${doc.root.@prefix}Contract.${getClassName(p.@name)};
 </#list>
 import ${namespace}.provider.${doc.root.@prefix}Database.Tables;
 
@@ -157,9 +157,9 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 				return builder.table(Tables.${fName?upper_case});
 			}
 			case ${fName?upper_case}_ID : {
-				final String ${className}Id = ${getClassName(fName)}.get${className?capitalize}Id(uri);
+				final String ${className?lower_case}Id = ${getClassName(fName)}.get${className?capitalize}Id(uri);
 				return builder.table(Tables.${fName?upper_case}).where(
-						${getClassName(fName)}._ID + "=?", ${className}Id);
+						${getClassName(fName)}._ID + "=?", ${className?lower_case}Id);
 			}
 		</#list>
 			default :
