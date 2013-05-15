@@ -27,11 +27,11 @@ public class ${doc.root.@prefix}Contract {
 		</#list>
 		
 		<#assign singular = p.@name?lower_case?substring(0,p.@name?length-1) >
-		public static Uri build${singular?capitalize}Uri(String ${singular}Id) {
-			return CONTENT_URI.buildUpon().appendPath(${singular}Id).build();
+		public static Uri build${getSingular(p)?capitalize}Uri(String ${getSingular(p)?lower_case}Id) {
+			return CONTENT_URI.buildUpon().appendPath(${getSingular(p)?lower_case}Id).build();
 		}
 		
-		public static String get${singular?capitalize}Id(Uri uri) {
+		public static String get${getSingular(p)?capitalize}Id(Uri uri) {
 			return uri.getPathSegments().get(1);
 		}
 	}

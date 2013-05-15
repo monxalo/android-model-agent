@@ -36,8 +36,8 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 	private static final int ${p.@name?upper_case}_ID = ${intValue+1};
 		<#list p.* as field>
 			<#if field.@ref[0]??><#assign result = field.@ref?split(".")>
-	private static final int ${p.@name?upper_case?substring(0,p.@name?length-1)}_${result[0]?upper_case} = ${intValue+2};
-	private static final int ${p.@name?upper_case?substring(0,p.@name?length-1)}_${result[0]?upper_case}_ID = ${intValue+3};
+	private static final int ${getSingular(p)?upper_case}_${result[0]?upper_case} = ${intValue+2};
+	private static final int ${getSingular(p)?upper_case}_${result[0]?upper_case}_ID = ${intValue+3};
 			</#if>
 		</#list>
 	<#assign intValue = intValue + 100> 
@@ -93,7 +93,7 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 				db.insertOrThrow(Tables.${eventsCap?upper_case}, null, values);
 				getContext().getContentResolver().notifyChange(uri, null);
 	
-				return ${getClassName(eventsCap)}.build${eventsCap?substring(0,eventsCap?length-1)}Uri(values.getAsString(${getClassName(eventsCap)}._ID));
+				return ${getClassName(eventsCap)}.build${getSingular(p)?capitalize}Uri(values.getAsString(${getClassName(eventsCap)}._ID));
 			}
 			</#list>
 			default: {
@@ -152,14 +152,14 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 		switch (match) {
 		<#list doc.root.entity as p>
 		<#assign fName = p.@name >
-		<#assign singular = getClassName(p.@name?substring(0,p.@name?length-1)) >
+		<#assign className = getClassName(getSingular(p)) >
 			case ${fName?upper_case}: {
 				return builder.table(Tables.${fName?upper_case});
 			}
 			case ${fName?upper_case}_ID : {
-				final String ${singular}Id = ${getClassName(fName)}.get${singular?capitalize}Id(uri);
+				final String ${className}Id = ${getClassName(fName)}.get${className?capitalize}Id(uri);
 				return builder.table(Tables.${fName?upper_case}).where(
-						${getClassName(fName)}._ID + "=?", ${singular}Id);
+						${getClassName(fName)}._ID + "=?", ${className}Id);
 			}
 		</#list>
 			default :
@@ -177,8 +177,8 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 				return builder.table(Table.${p.@name?upper_case}_JOIN_${result[0]?upper_case});
 			}
 			case ${p.@name?upper_case}_ID: {
-				final String ${p.@name?substring(0,p.@name?length-1)}Id = ${p.@name?capitalize}.get${p.@name?capitalize?substring(0,p.@name?length-1)}Id(uri);
-				return builder.table(Table.${p.@name?upper_case}_JOIN_${result[0]?upper_case}).where(${p.@name?capitalize}._ID + "=?", ${p.@name?substring(0,p.@name?length-1)}Id);
+				final String ${getSingular(p)}Id = ${p.@name?capitalize}.get${getSingular(p)?capitalize}Id(uri);
+				return builder.table(Table.${p.@name?upper_case}_JOIN_${result[0]?upper_case}).where(${p.@name?capitalize}._ID + "=?", ${getSingular(p)}Id);
 			}
 				</#if>
 			</#list>
