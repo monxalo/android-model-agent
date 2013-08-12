@@ -1,0 +1,28 @@
+def prefix = "NotesApp"
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	
+	dependencies {
+		classpath group: 'net.sourceforge.fmpp', name: 'fmpp', version: '0.9.+'
+	}
+}
+
+task check << {	
+    ant.taskdef(name: 'fmpp', classname:'fmpp.tools.AntTask', classpath: buildscript.configurations.classpath.asPath) 
+}
+
+task gen(dependsOn: 'check') << {
+	ant.fmpp( dataRoot:".", sourceRoot:"src", outputRoot:"gen", removeExtensions:"ftl", data:"{doc: xml(data/model.xml)}")
+	
+	ant.move( todir:"gen", includeemptydirs : false ) {
+		ant.fileset( dir: "gen" )
+		ant.mapper( type:"glob", from:"*", to: prefix + "*")
+	}
+}
+	
+task clean << {
+	delete 'gen'
+}
