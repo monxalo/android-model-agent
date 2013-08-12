@@ -18,4 +18,4 @@ This project uses [FreeMarker][1] for file generating, all dependencies are incl
 
  [1]:http://freemarker.sourceforge.net/fmpp.html
  [2]:https://code.google.com/p/iosched/
- [3]:https://code.google.com/p/iosched/source/browse/android/src/com/google/android/apps/iosched/util/SelectionBuilder.java
+ [3]:https://code.google.com/p/iosched/source/browse/android/src/main/java/com/google/android/apps/iosched/util/SelectionBuilder.java
