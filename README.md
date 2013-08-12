@@ -9,6 +9,8 @@ Edit the `data/model.xml` file for your model and run ant on the root of the pro
 The files generated are placed in the gen folder.
 You also need to match the `prefix` value with the same property in the `build.gradle` file.
 
+To generate the files call `gradlew gen` or `gradle gen`.
+
 The files generated are based on the open source [Google IO][2] project.
 You can download the [`SelectionBuilder`][3] class from there.
 
