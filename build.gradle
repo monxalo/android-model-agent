@@ -18,15 +18,20 @@ task check << {
 
 task gen(dependsOn: 'check') << {
 	tasks.clean.execute()
-
-	ant.fmpp( dataRoot:".", sourceRoot:"src", outputRoot:"gen", removeExtensions:"ftl", data:"{doc: xml(data/model.xml)}")
 	
 	def parsedDataXml = (new XmlParser()).parse('data/model.xml')
 	
-	def prefix = parsedDataXml.@prefix
+	def prefix = parsedDataXml.@prefix	
+	def directory = parsedDataXml.@namespace.replaceAll('\\.','\\/')
 	
-	ant.move( todir:"gen", includeemptydirs : false ) {
-		ant.fileset( dir: "gen" )
+	def destDir = directory + '/provider'
+
+	ant.fmpp( dataRoot:".", sourceRoot:"src", outputRoot: 'gen/' + destDir, removeExtensions:"ftl", data:"{doc: xml(data/model.xml)}")
+		
+	ant.move( todir: 'gen/' + destDir, includeemptydirs : false ) {
+		ant.fileset( dir: 'gen/' + destDir ) {
+			exclude( name: "SelectionBuilder.java" )
+		}
 		ant.mapper( type:"glob", from:"*", to: prefix + "*")
 	}
 }
