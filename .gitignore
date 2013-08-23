@@ -2,6 +2,7 @@ bin/*
 gen/*
 requestReview.sh
 
+.gradle
 .externalToolBuilders
 .project
 .settings
