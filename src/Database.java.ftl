@@ -33,7 +33,7 @@ public class ${prefix}Database extends SQLiteOpenHelper {
 		<#list p.* as field>
 		<#if field.@ref[0]??><#assign result = field.@ref?split(".")>
 		protected static final String ${p.@name?upper_case}_JOIN_${result[0]?upper_case} = ${p.@name?upper_case}
-				+ " INNER JOIN "+${result[0]?upper_case} + " ON "+${p.@name?capitalize}.${field.@name?upper_case}+"="+${result[0]?capitalize}.${result[1]?upper_case});
+				+ " INNER JOIN "+${result[0]?upper_case} + " ON "+${p.@name?capitalize}.${field.@name?upper_case}+"="+${result[0]?capitalize}.${result[1]?upper_case};
 			</#if>
 		</#list>
 	</#list>
