@@ -15,7 +15,7 @@
  */
 
 <#assign namespace = doc.root.@namespace>
-package ${namespace}.provider;
+package ${namespace}.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
