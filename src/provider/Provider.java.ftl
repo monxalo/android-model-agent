@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import ${namespace}.provider.${doc.root.@prefix}Contract.${getClassName(p.@name)};
 </#list>
 import ${namespace}.provider.${doc.root.@prefix}Database.Tables;
+import ${namespace}.util.SelectionBuilder;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
