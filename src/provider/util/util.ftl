@@ -34,7 +34,7 @@ reflist = hasBelongMany?split(",")>
 				>
 			<#if from2==to>
 				<#if ref2[1]==from>
-					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">
+					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">		
 					<#assign relationJoinDeclaration>
 ${relationJoinDeclaration}protected static final String ${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${from?upper_case} 
 				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${fromS}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
@@ -102,10 +102,23 @@ ${query}case ${from?upper_case}_ID_${to?upper_case}: {
 </#function>
 
 <#function getSingular entity>
-<#if entity.@singular[0]??>
-<#assign singular = entity.@singular>
+<!-- get the singular attribute of an entity if present, or trim the last char of the name.
+	parameter: entity node or name string -->
+
+<!-- if Node -->
+<#if entity?is_sequence>
+	<#if entity.@singular[0]??>
+		<#assign singular = entity.@singular>
+	<#else>
+		<#assign singular = entity.@name?substring(0,entity.@name?length-1) >
+	</#if>
+	<#return singular>
+<!-- if String -->
 <#else>
-<#assign singular = entity.@name?substring(0,entity.@name?length-1) >
+	<#list doc.root.entity as p>
+	<#if p.@name=entity>
+		${getSingular(p)}
+	</#if>
+	</#list>
 </#if>
-<#return singular>
 </#function>
