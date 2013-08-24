@@ -51,7 +51,7 @@ ${matcherURI}matcher.addURI(authority, "${from}/#/${to}", ${from?upper_case}_ID_
 					<#assign query>
 ${query}case ${from?upper_case}_ID_${to?upper_case}: {
 				final String ${toS}Id = Types.get${to?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", eventId);
+				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${toS}Id);
 			}::case ${to?upper_case}_ID_${from?upper_case}: {
 				final String ${fromS}Id = Types.get${from?capitalize}Id(uri);
 				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${fromS}Id);
