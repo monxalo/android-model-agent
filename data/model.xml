@@ -3,13 +3,18 @@
 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="model.xsd">
 
+	<entity name="categories" generateIds="true" singular="category" hasAndBelongsToMany="notePads">
+	    <field name="title" isNull="false" type="string" />
+	    <field name="date_created" isNull="false" type="date" />
+	</entity>
+	<entity name="notePads" generateIds="true" hasAndBelongsToMany="categories">
+	    <field name="title" isNull="false" type="string" />
+	    <field name="date_created" isNull="false" type="date" />
+	</entity>
 	<entity name="notes" generateIds="true">
 	    <field name="title" isNull="false" type="string" />
 	    <field name="text" isNull="false" type="string" />
 	    <field name="date_created" isNull="false" type="date" />
-	</entity>
-	<entity name="inventories" generateIds="true" singular="inventory">
-	    <field name="title" isNull="false" type="string" />
-	    <field name="text" isNull="false" type="string" />
+	    <field name="notepad_id" isNull="false" type="int" ref="notePads._ID"/>
 	</entity>
 </root>
