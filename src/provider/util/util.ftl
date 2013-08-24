@@ -10,7 +10,7 @@ uriCode=""
 query="">
 <#list doc.root.entity as p>
 	<#if p.@hasAndBelongsToMany[0]??>
-		<#assign hasBelongMany="${hasBelongMany}${p.@name}:${p.@hasAndBelongsToMany},">
+		<#assign hasBelongMany="${hasBelongMany}${p.@name};${getSingular(p)}:${p.@hasAndBelongsToMany},">
 	</#if>
 </#list>
 <#if hasBelongMany !="">
@@ -18,35 +18,43 @@ query="">
 reflist = hasBelongMany?split(",")>
 <#list reflist as l>
 	<#assign ref=l?split(":")
-	from =ref[0]
-	to = ref[1]
-	>
+	tempFrom =ref[0]>
+		<#assign refS=tempFrom?split(";")
+		from=refS[0]
+		fromS=refS[1]
+		>
+	<#assign to = ref[1]>
 	<#list reflist as l2>
 		<#if i < k >
-			<#assign ref2=l2?split(":")>
-			<#if ref2[0]==to>
+			<#assign ref2=l2?split(":")
+			tempFrom2 = ref2[0]>
+				<#assign refS2=tempFrom2?split(";")
+				from2=refS2[0]
+				toS=refS2[1]
+				>
+			<#if from2==to>
 				<#if ref2[1]==from>
 					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">
 					<#assign relationJoinDeclaration>
 ${relationJoinDeclaration}protected static final String ${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${from?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${from?substring(0,from?length-1)}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${to?substring(0,to?length-1)}_id";,</#assign>
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${fromS}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${toS}_id";,</#assign>
 					<#assign relationTablesDefinition>
 ${relationTablesDefinition}db.execSQL("+CREATE TABLE " + Tables.${from?upper_case}_${to?upper_case} + " ("
 			+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "${from?substring(0,from?length-1)}_id INTEGER NOT NULL REFERENCES "+Tables.${to?upper_case}+"("+BaseColumns._ID+"),"
-			+ "${to?substring(0,to?length-1)}_id INTEGER NOT NULL REFERENCES "+Tables.${from?upper_case}+"("+BaseColumns._ID+")"
+			+ "${fromS}_id INTEGER NOT NULL REFERENCES "+Tables.${to?upper_case}+"("+BaseColumns._ID+"),"
+			+ "${toS}_id INTEGER NOT NULL REFERENCES "+Tables.${from?upper_case}+"("+BaseColumns._ID+")"
 			+ ")");:</#assign>
 					<#assign uriCode="${uriCode}${from?upper_case}_ID_${to?upper_case}:${to?upper_case}_ID_${from?upper_case}:" >
 					<#assign matcherURI>
 ${matcherURI}matcher.addURI(authority, "${from}/#/${to}", ${from?upper_case}_ID_${to?upper_case});:matcher.addURI(authority, "${to}/#/${from}", ${to?upper_case}_ID_${from?upper_case});</#assign>
 					<#assign query>
 ${query}case ${from?upper_case}_ID_${to?upper_case}: {
-				final String ${to?substring(0,to?length-1)}Id = Types.get${to?capitalize}Id(uri);
+				final String ${toS}Id = Types.get${to?capitalize}Id(uri);
 				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", eventId);
 			}::case ${to?upper_case}_ID_${from?upper_case}: {
-				final String ${from?substring(0,from?length-1)}Id = Types.get${from?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${from?substring(0,from?length-1)}Id);
+				final String ${fromS}Id = Types.get${from?capitalize}Id(uri);
+				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${fromS}Id);
 			}::</#assign>
 				</#if>
 			</#if>
