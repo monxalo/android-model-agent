@@ -28,8 +28,8 @@ reflist = hasBelongMany?split(",")>
 					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">		
 					<#assign relationJoinDeclaration>
 ${relationJoinDeclaration}protected static final String ${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${from?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${getSingular(from)}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${getSingular(to)}_id";,</#assign>
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON "+${from?upper_case}+"._id = ${getSingular(from)}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON "+${to?upper_case}+"._id = ${getSingular(to)}_id";,</#assign>
 					<#assign relationTablesDefinition>
 ${relationTablesDefinition}db.execSQL("+CREATE TABLE " + Tables.${from?upper_case}_${to?upper_case} + " ("
 			+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -41,11 +41,11 @@ ${relationTablesDefinition}db.execSQL("+CREATE TABLE " + Tables.${from?upper_cas
 ${matcherURI}matcher.addURI(authority, "${from}/#/${to}", ${from?upper_case}_ID_${to?upper_case});:matcher.addURI(authority, "${to}/#/${from}", ${to?upper_case}_ID_${from?upper_case});</#assign>
 					<#assign query>
 ${query}case ${from?upper_case}_ID_${to?upper_case}: {
-				final String ${getSingular(to)}Id = ${to?capitalize}.get${getSingular(to)?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${getSingular(to)}Id);
+				final String ${getSingular(from)}Id = ${from?capitalize}.get${getSingular(from)?capitalize}Id(uri);
+				return builder.table(Table.${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("${getSingular(from)}_id=?", ${getSingular(from)}Id);
 			}::case ${to?upper_case}_ID_${from?upper_case}: {
-				final String ${getSingular(from)}Id = Types.get${from?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${getSingular(from)}Id);
+				final String ${getSingular(to)}Id = ${to?capitalize}.get${to?capitalize}Id(uri);
+				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("${getSingular(to)}_id=?", ${getSingular(to)}Id);
 			}::</#assign>
 				</#if>
 			</#if>

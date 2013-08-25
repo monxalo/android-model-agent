@@ -39,7 +39,7 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 			<#if field.@ref[0]??><#assign result = field.@ref?split(".")>
 	private static final int ${p.@name?upper_case}_${result[0]?upper_case} = ${intValue+2};
 	private static final int ${p.@name?upper_case}_${result[0]?upper_case}_ID = ${intValue+3};
-	private static final int ${p.@name?upper_case}_ID_${result[0]?upper_case} = ${intValue+4};
+	private static final int ${result[0]?upper_case}_ID_${p.@name?upper_case} = ${intValue+4};
 			</#if>
 		</#list>
 	<#assign intValue = intValue + 100> 
@@ -182,7 +182,7 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 				final String ${getSingular(p)}Id = ${p.@name?capitalize}.get${getSingular(p)?capitalize}Id(uri);
 				return builder.table(Table.${p.@name?upper_case}_JOIN_${result[0]?upper_case}).where(${p.@name?capitalize}._ID + "=?", ${getSingular(p)}Id);
 			}
-			case ${p.@name?upper_case}_ID_${result[0]?upper_case}: {
+			case ${result[0]?upper_case}_ID_${p.@name?upper_case}: {
 				final String ${getSingular(result[0])}Id = ${result[0]?capitalize}.get${getSingular(result[0])?capitalize}Id(uri);
 				return builder.table(Table.${p.@name?upper_case}_JOIN_${result[0]?upper_case}).where(${result[0]?capitalize}._ID + "=?", ${getSingular(result[0])}Id);
 			}
@@ -206,7 +206,7 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 			<#list p.field as r>
 			<#if r.@ref[0]??>
 			<#assign refTo = r.@ref?split(".")>
-		matcher.addURI(authority, "${p.@name}/#/${refTo[0]}", ${p.@name?upper_case}_ID_${refTo[0]?upper_case});
+		matcher.addURI(authority, "${refTo[0]}/#/${p.@name}", ${refTo[0]?upper_case}_ID_${p.@name?upper_case});
 			</#if>
 			</#list>
         </#list>
