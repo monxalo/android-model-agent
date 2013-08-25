@@ -37,9 +37,7 @@ public class ${doc.root.@prefix}Provider extends ContentProvider {
 	private static final int ${p.@name?upper_case}_ID = ${intValue+1};
 		<#list p.* as field>
 			<#if field.@ref[0]??><#assign result = field.@ref?split(".")>
-	private static final int ${p.@name?upper_case}_${result[0]?upper_case} = ${intValue+2};
-	private static final int ${p.@name?upper_case}_${result[0]?upper_case}_ID = ${intValue+3};
-	private static final int ${result[0]?upper_case}_ID_${p.@name?upper_case} = ${intValue+4};
+	private static final int ${result[0]?upper_case}_ID_${p.@name?upper_case} = ${intValue+2};
 			</#if>
 		</#list>
 	<#assign intValue = intValue + 100> 
