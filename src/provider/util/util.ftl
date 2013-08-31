@@ -19,34 +19,33 @@ reflist = hasBelongMany?split(",")>
 <#list reflist as l>
 	<#assign ref=l?split(":")
 	from =ref[0]
-	to = ref[1]
-	>
+	to = ref[1]>
 	<#list reflist as l2>
 		<#if i < k >
 			<#assign ref2=l2?split(":")>
 			<#if ref2[0]==to>
 				<#if ref2[1]==from>
-					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">
+					<#assign relationTablesDeclaration ="${relationTablesDeclaration}protected static final String ${from?upper_case}_${to?upper_case} = \"${from?lower_case}_${to?lower_case}\";,">		
 					<#assign relationJoinDeclaration>
 ${relationJoinDeclaration}protected static final String ${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${from?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${from?substring(0,from?length-1)}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
-				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON _id = ${to?substring(0,to?length-1)}_id";,</#assign>
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON "+${from?upper_case}+"._id = ${getSingular(from)}_id";,protected static final String ${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case} = ${to?upper_case} 
+				+ " INNER JOIN "+${from?upper_case}_${to?upper_case}+" ON "+${to?upper_case}+"._id = ${getSingular(to)}_id";,</#assign>
 					<#assign relationTablesDefinition>
 ${relationTablesDefinition}db.execSQL("+CREATE TABLE " + Tables.${from?upper_case}_${to?upper_case} + " ("
 			+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "${from?substring(0,from?length-1)}_id INTEGER NOT NULL REFERENCES "+Tables.${to?upper_case}+"("+BaseColumns._ID+"),"
-			+ "${to?substring(0,to?length-1)}_id INTEGER NOT NULL REFERENCES "+Tables.${from?upper_case}+"("+BaseColumns._ID+")"
+			+ "${getSingular(from)}_id INTEGER NOT NULL REFERENCES "+Tables.${to?upper_case}+"("+BaseColumns._ID+"),"
+			+ "${getSingular(to)}_id INTEGER NOT NULL REFERENCES "+Tables.${from?upper_case}+"("+BaseColumns._ID+")"
 			+ ")");:</#assign>
 					<#assign uriCode="${uriCode}${from?upper_case}_ID_${to?upper_case}:${to?upper_case}_ID_${from?upper_case}:" >
 					<#assign matcherURI>
 ${matcherURI}matcher.addURI(authority, "${from}/#/${to}", ${from?upper_case}_ID_${to?upper_case});:matcher.addURI(authority, "${to}/#/${from}", ${to?upper_case}_ID_${from?upper_case});</#assign>
 					<#assign query>
 ${query}case ${from?upper_case}_ID_${to?upper_case}: {
-				final String ${to?substring(0,to?length-1)}Id = Types.get${to?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", eventId);
+				final String ${getSingular(from)}Id = ${from?capitalize}.get${getSingular(from)?capitalize}Id(uri);
+				return builder.table(Table.${to?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("${getSingular(from)}_id=?", ${getSingular(from)}Id);
 			}::case ${to?upper_case}_ID_${from?upper_case}: {
-				final String ${from?substring(0,from?length-1)}Id = Types.get${from?capitalize}Id(uri);
-				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("_id=?", ${from?substring(0,from?length-1)}Id);
+				final String ${getSingular(to)}Id = ${to?capitalize}.get${to?capitalize}Id(uri);
+				return builder.table(Table.${from?upper_case}_JOIN_${from?upper_case}_${to?upper_case}).where("${getSingular(to)}_id=?", ${getSingular(to)}Id);
 			}::</#assign>
 				</#if>
 			</#if>
@@ -94,10 +93,23 @@ ${query}case ${from?upper_case}_ID_${to?upper_case}: {
 </#function>
 
 <#function getSingular entity>
-<#if entity.@singular[0]??>
-<#assign singular = entity.@singular>
+<!-- get the singular attribute of an entity if present, or trim the last char of the name.
+	parameter: entity node or name string -->
+
+<!-- if Node -->
+<#if entity?is_sequence>
+	<#if entity.@singular[0]??>
+		<#assign singular = entity.@singular>
+	<#else>
+		<#assign singular = entity.@name?substring(0,entity.@name?length-1) >
+	</#if>
+	<#return singular>
+<!-- if String -->
 <#else>
-<#assign singular = entity.@name?substring(0,entity.@name?length-1) >
+	<#list doc.root.entity as p>
+	<#if p.@name=entity>
+		${getSingular(p)}
+	</#if>
+	</#list>
 </#if>
-<#return singular>
 </#function>
