@@ -1,0 +1,6 @@
+language: groovy
+script:
+  - ./gradlew gen
+branches:
+  except:
+    - gh-pages
