@@ -12,4 +12,6 @@ Under the hood
 --------------
 This project uses [FreeMarker][1] for file generation.
 
+[![Build Status](https://travis-ci.org/monxalo/android-model-agent.svg)](https://travis-ci.org/monxalo/android-model-agent)
+
  [1]:http://freemarker.sourceforge.net/fmpp.html
