@@ -1,6 +1,20 @@
 language: groovy
+
+jdk:
+  - oraclejdk7
+
 script:
   - ./gradlew gen
+
 branches:
   except:
     - gh-pages
+
+notifications:
+  email: false
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.gradle
