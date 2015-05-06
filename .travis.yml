@@ -6,6 +6,9 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+before_script:
+  - ./gradlew tasks
+
 script:
   - ./gradlew gen
 
