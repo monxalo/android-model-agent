@@ -6,6 +6,8 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+install: true
+
 before_script:
   - ./gradlew tasks
 
